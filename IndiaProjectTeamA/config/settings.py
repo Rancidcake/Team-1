@@ -24,7 +24,7 @@ DEBUG = True
 # ローカル専用。外部ホストは許可しない。
 # プレゼン用の名前(hostsで 127.0.0.1 に向けた名前)も許可する。
 # ブラウザはホスト名を小文字で送ることがあるため、両方登録する。
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "securitylabND", "securitylabnd"]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "securitylabND", "securitylabnd", ".vercel.run"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
