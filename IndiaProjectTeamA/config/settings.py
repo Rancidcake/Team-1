@@ -5,12 +5,12 @@ Django settings for the Web Security Academy (learning edition).
 ローカル(127.0.0.1)でのみ動かすことを前提にしています。
 絶対にインターネットへ公開しないでください。
 """
+import os
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 学習用のため固定キー。公開環境では使わないこと。
-SECRET_KEY = "django-insecure-learning-only-do-not-deploy"
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", "django-insecure-learning-only-do-not-deploy")
 
 from dotenv import load_dotenv
 
@@ -18,13 +18,22 @@ from dotenv import load_dotenv
 # import だけでは読み込まれないため、必ず呼び出す。.env は .gitignore 済み。
 load_dotenv(BASE_DIR / ".env")
 
-# 脆弱性デモをそのまま見せるため DEBUG=True のまま。公開しない前提。
-DEBUG = True
+DEBUG = os.getenv("DJANGO_DEBUG", "false").lower() == "true"
 
-# ローカル専用。外部ホストは許可しない。
-# プレゼン用の名前(hostsで 127.0.0.1 に向けた名前)も許可する。
-# ブラウザはホスト名を小文字で送ることがあるため、両方登録する。
-ALLOWED_HOSTS = ["127.0.0.1", "localhost", "securitylabND", "securitylabnd", ".vercel.run"]
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    "securitylabnd",
+    ".vercel.app",
+    ".vercel.run",
+]
+if os.getenv("VERCEL_URL"):
+    ALLOWED_HOSTS.append(os.getenv("VERCEL_URL"))
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.vercel.app",
+    "https://*.vercel.run",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
